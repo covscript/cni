@@ -46,8 +46,10 @@
 #include <vector>
 #include <memory>
 #include <deque>
+// CovScript ABI Version
+// Must be different to SDK
+#define COVSCRIPT_ABI_VERSION 000307
 // CovScript Headers
-#define COVSCRIPT_ABI_VERSION 230307
 #include <covscript/core/components.hpp>
 #include <covscript/core/definition.hpp>
 #include <covscript/core/variable.hpp>
