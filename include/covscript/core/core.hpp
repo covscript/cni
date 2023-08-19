@@ -54,7 +54,7 @@
 #include <list>
 // CovScript ABI Version
 // Must be different to SDK
-#define COVSCRIPT_ABI_VERSION 000307
+#define COVSCRIPT_ABI_VERSION 990307
 // CovScript Headers
 #include <covscript/core/components.hpp>
 #include <covscript/core/definition.hpp>
