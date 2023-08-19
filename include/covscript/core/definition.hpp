@@ -122,14 +122,19 @@ namespace cs {
 	template<typename _kT, typename _vT> using map_t = std::unordered_map<_kT, _vT>;
 	template<typename _Tp> using set_t = std::unordered_set<_Tp>;
 
-
 	using var = cs_impl::any;
 	using boolean = bool;
 	using string = std::string;
+	using list = std::list<var>;
+	using array = std::deque<var>;
+	using pair = std::pair<var, var>;
+	using hash_set = set_t<var>;
+	using hash_map = map_t<var, var>;
 	using vector = std::vector<var>;
-	using callable = std::function<var(vector &)>;
 	using domain_t = std::shared_ptr<domain_type>;
 	using namespace_t = std::shared_ptr<name_space>;
+	using istream = std::shared_ptr<std::istream>;
+	using ostream = std::shared_ptr<std::ostream>;
 
 // Compatible declaration since 210503
 	using number = numeric_float;

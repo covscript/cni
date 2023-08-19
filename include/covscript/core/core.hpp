@@ -33,12 +33,17 @@
 // STL
 #include <unordered_map>
 #include <unordered_set>
-#include <forward_list>
 #include <type_traits>
 #include <functional>
 #include <typeindex>
 #include <exception>
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <istream>
+#include <ostream>
+#include <utility>
 #include <cstring>
 #include <atomic>
 #include <cctype>
@@ -46,6 +51,7 @@
 #include <vector>
 #include <memory>
 #include <deque>
+#include <list>
 // CovScript ABI Version
 // Must be different to SDK
 #define COVSCRIPT_ABI_VERSION 000307
@@ -105,6 +111,59 @@ namespace cs {
 	extern process_context this_process;
 	extern process_context *current_process;
 
+	// Callable and Function
+	class callable final {
+	public:
+		using function_type = std::function<var(vector &)>;
+		enum class types {
+			normal, request_fold, member_fn, member_visitor, force_regular
+		};
+	private:
+		function_type mFunc;
+		types mType = types::normal;
+	public:
+		callable() = delete;
+
+		callable(const callable &) = default;
+
+		explicit callable(function_type func, types type = types::normal) : mFunc(std::move(func)), mType(type) {}
+
+		bool is_request_fold() const
+		{
+			return mType == types::request_fold;
+		}
+
+		bool is_member_fn() const
+		{
+			return mType == types::member_fn;
+		}
+
+		types type() const
+		{
+			return mType;
+		}
+
+		var call(vector &args) const
+		{
+			return mFunc(args);
+		}
+
+		const function_type &get_raw_data() const
+		{
+			return mFunc;
+		}
+	};
+
+// Copy
+	void copy_no_return(var &);
+
+	var copy(var);
+
+// Move Semantics
+	var lvalue(const var &);
+
+	var rvalue(const var &);
+
 	var try_move(const var &);
 
 	template<typename... ArgsT>
@@ -112,7 +171,7 @@ namespace cs {
 	{
 		if (func.type() == typeid(callable)) {
 			vector args{std::forward<ArgsT>(_args)...};
-			return func.const_val<callable>()(args);
+			return func.const_val<callable>().call(args);
 		}
 		else
 			throw runtime_error("Invoke non-callable object.");

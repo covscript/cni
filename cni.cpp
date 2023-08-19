@@ -96,10 +96,48 @@ namespace cs {
 	process_context this_process;
 	process_context *current_process = &this_process;
 
+	void copy_no_return(var &val)
+	{
+		if (!val.is_rvalue()) {
+			val.clone();
+			val.detach();
+		}
+		else
+			val.mark_as_rvalue(false);
+	}
+
+	var copy(var val)
+	{
+		if (!val.is_rvalue()) {
+			val.clone();
+			val.detach();
+		}
+		else
+			val.mark_as_rvalue(false);
+		return val;
+	}
+
+	var lvalue(const var &val)
+	{
+		val.mark_as_rvalue(false);
+		return val;
+	}
+
+	var rvalue(const var &val)
+	{
+		val.mark_as_rvalue(true);
+		return val;
+	}
+
 	var try_move(const var &val)
 	{
 		val.try_move();
 		return val;
+	}
+
+	var make_namespace(const namespace_t &ns)
+	{
+		return var::make_protect<namespace_t>(ns);
 	}
 
 	garbage_collector<cov::dll> extension::gc;
