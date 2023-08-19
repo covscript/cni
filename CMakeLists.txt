@@ -33,3 +33,7 @@ add_library(test-cni-lib SHARED ./tests/dll.cpp)
 
 target_link_libraries(test-cni covscript)
 target_link_libraries(test-cni-lib covscript)
+
+set_target_properties(test-cni-lib PROPERTIES OUTPUT_NAME test-cni)
+set_target_properties(test-cni-lib PROPERTIES PREFIX "")
+set_target_properties(test-cni-lib PROPERTIES SUFFIX ".cse")

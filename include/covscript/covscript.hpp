@@ -25,6 +25,7 @@
 * Website: https://covscript.org.cn
 */
 #include <covscript/core/core.hpp>
+#include <covscript/core/cni.hpp>
 
 namespace cs_function_invoker_impl {
 	template<typename T>

@@ -487,12 +487,27 @@ namespace cs {
 	 * Make Regular CNI Function
 	 * @tparam T
 	 * @param func
+	 * @param request_fold
 	 * @return cs::callable in variable
 	 */
 	template<typename T>
-	var make_cni(T &&func)
+	var make_cni(T &&func, bool request_fold = false)
 	{
-		return var::make_protect<callable>(cni(func));
+		return var::make_protect<callable>(cni(func),
+		                                   request_fold ? callable::types::request_fold : callable::types::normal);
+	}
+
+	/**
+	 * Make Regular CNI Function
+	 * @tparam T
+	 * @param func
+	 * @param type
+	 * @return cs::callable in variable
+	 */
+	template<typename T>
+	var make_cni(T &&func, callable::types type)
+	{
+		return var::make_protect<callable>(cni(func), type);
 	}
 
 	/**
@@ -501,12 +516,29 @@ namespace cs {
 	 * @tparam X
 	 * @param func
 	 * @param type cs::cni_type<ReturnType(ArgumentType...)>
+	 * @param request_fold
 	 * @return cs::callable in variable
 	 */
 	template<typename T, typename X>
-	var make_cni(T &&func, const cni_type<X> &type)
+	var make_cni(T &&func, const cni_type<X> &type, bool request_fold = false)
 	{
-		return var::make_protect<callable>(cni(func, type));
+		return var::make_protect<callable>(cni(func, type),
+		                                   request_fold ? callable::types::request_fold : callable::types::normal);
+	}
+
+	/**
+	 * Make CNI Function with specific feature
+	 * @tparam T
+	 * @tparam X
+	 * @param func
+	 * @param type cs::cni_type<ReturnType(ArgumentType...)>
+	 * @param callable_type
+	 * @return cs::callable in variable
+	 */
+	template<typename T, typename X>
+	var make_cni(T &&func, const cni_type<X> &type, callable::types callable_type)
+	{
+		return var::make_protect<callable>(cni(func, type), callable_type);
 	}
 
 	/**
@@ -522,7 +554,8 @@ namespace cs {
 		return var::make_protect<callable>(
 		cni([member](_Class &__this) {
 			return cs::var::make_constant<cs::member_visitor>(__this, member);
-		}));
+		}),
+		cs::callable::types::member_visitor);
 	}
 
 	/**
@@ -537,7 +570,8 @@ namespace cs {
 		return var::make_protect<callable>(
 		cni([member](const _Class &__this) {
 			return __this.*member;
-		}));
+		}),
+		cs::callable::types::member_visitor);
 	}
 
 	/**
@@ -553,7 +587,8 @@ namespace cs {
 		return var::make_protect<callable>(
 		cni([member](const _Class &__this) {
 			return cs::var::make_constant<cs::member_visitor>(__this, member);
-		}));
+		}),
+		cs::callable::types::member_visitor);
 	}
 
 	/**
@@ -569,6 +604,7 @@ namespace cs {
 		return var::make_protect<callable>(
 		cni([member](const _Class &__this) {
 			return __this.*member;
-		}));
+		}),
+		cs::callable::types::member_visitor);
 	}
 }
